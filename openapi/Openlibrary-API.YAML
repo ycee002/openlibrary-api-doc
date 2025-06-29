@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: OpenLibrary Subjects API
+  version: 1.0.0
+  description: >
+    This API allows you to search for books and other works based on subject tags.
+    You can also refine your search using options like `details` (for more information), `ebooks` (to find
+    only digital books), and `published_in` (to filter by publication year).
+
+servers:
+  - url: https://openlibrary.org
+
+paths:
+  /subjects/{subject}.json:
+    get:
+      summary: Get books and works related to a specific subject
+      description: >
+        Find a list of books and other content associated with a chosen subject.
+        You can also narrow down your results using optional filters like
+        including more details, showing only ebooks, or specifying a publication year or range.
+      parameters:
+        - name: subject
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The main subject you're interested in (e.g., "science fiction", "cooking").
+        - name: details
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Set to `true` to get more extensive information for each work listed.
+        - name: ebooks
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Set to `true` to display only works that have an ebook version available.
+        - name: published_in
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter works by their publication date. You can provide a single year (e.g., "2000") or a range (e.g., "1950-1960").
+      responses:
+        '200':
+          description: A successful response returning a list of subjects and related works.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectList'
+        '404':
+          description: The requested subject was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 404
+                message: Subject not found in the database.
+        '500':
+          description: An unexpected server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: An unexpected error occurred. Please try again later.
+
+components:
+  schemas:
+    SubjectList:
+      type: object
+      properties:
+        key:
+          type: string
+          example: /subjects/love
+          description: The unique identifier for the subject.
+        name:
+          type: string
+          example: love
+          description: The name of the subject.
+        subject_type:
+          type: string
+          example: subject
+          description: The type of entry (always 'subject' for this endpoint).
+        work_count:
+          type: integer
+          example: 17822
+          description: The total number of works found for this subject.
+        works:
+          type: array
+          description: A list of individual works related to the subject.
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                example: /works/OL21177W
+                description: The unique identifier for the work.
+              title:
+                type: string
+                example: Wuthering Heights
+                description: The title of the work.
+              edition_count:
+                type: integer
+                example: 2850
+                description: The number of different editions available for this work.
+              cover_id:
+                type: integer
+                example: 12818862
+                description: The ID for the work's cover image.
+              cover_edition_key:
+                type: string
+                example: OL38586477M
+                description: The key for the specific edition's cover image.
+              subject:
+                type: array
+                description: A list of subjects or tags associated with this specific work.
+                items:
+                  type: string
+                example:
+                  - "British and irish fiction (fictional works by one author)"
+                  - "Drama"
+                  - "Fiction"
+                  - "Love stories"
+                  - "Triangles (Interpersonal relations)"
+                  - "Romance fiction"
+                  - "Heathcliff (Fictitious character : Brontë)"
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 404
+          description: The HTTP status code of the error.
+        message:
+          type: string
+          example: Not found
+          description: A clear message describing the error.
