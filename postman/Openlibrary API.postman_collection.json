@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "c746f5e7-b9da-4682-958d-8077739cb709",
+		"name": "Openlibrary API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42251888"
+	},
+	"item": [
+		{
+			"name": "Subjects",
+			"item": [
+				{
+					"name": "Get works of a subject",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://openlibrary.org/subjects/love.json",
+							"protocol": "http",
+							"host": [
+								"openlibrary",
+								"org"
+							],
+							"path": [
+								"subjects",
+								"love.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
