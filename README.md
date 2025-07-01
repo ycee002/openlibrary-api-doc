@@ -49,7 +49,7 @@ This repository includes:
 
 ## 👤 Author
 
-* **Osagie Uwaiia (Ycee)**
+* **Osagie Uwaila (Ycee)**
 * [GitHub Profile](https://github.com/ycee002)
 
 ---
